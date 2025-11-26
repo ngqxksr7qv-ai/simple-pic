@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Physical Inventory Count - User Manual</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        header p {
+            font-size: 1.2em;
+            opacity: 0.95;
+        }
+
+        nav {
+            background: #f8f9fa;
+            padding: 20px 30px;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        nav a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 8px 16px;
+            border-radius: 6px;
+            transition: all 0.3s;
+        }
+
+        nav a:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .content {
+            padding: 40px 30px;
+        }
+
+        section {
+            margin-bottom: 50px;
+        }
+
+        h2 {
+            color: #667eea;
+            font-size: 2em;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+        }
+
+        h3 {
+            color: #764ba2;
+            font-size: 1.5em;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+
+        p {
+            margin-bottom: 15px;
+            font-size: 1.05em;
+        }
+
+        ul, ol {
+            margin-left: 30px;
+            margin-bottom: 20px;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        .screenshot {
+            width: 100%;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin: 20px 0;
+        }
+
+        .feature-box {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 6px;
+        }
+
+        .feature-box h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .tip {
+            background: #e7f3ff;
+            border-left: 4px solid #2196F3;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 6px;
+        }
+
+        .tip::before {
+            content: "💡 Tip: ";
+            font-weight: 700;
+            color: #2196F3;
+        }
+
+        .warning {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 6px;
+        }
+
+        .warning::before {
+            content: "⚠️ Important: ";
+            font-weight: 700;
+            color: #f57c00;
+        }
+
+        code {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95em;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin: 0 5px;
+        }
+
+        .badge-green {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .badge-yellow {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .badge-red {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        footer {
+            background: #f8f9fa;
+            padding: 30px;
+            text-align: center;
+            border-top: 2px solid #e9ecef;
+            color: #666;
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8em;
+            }
+
+            .content {
+                padding: 20px 15px;
+            }
+
+            nav ul {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📦 Physical Inventory Count</h1>
+            <p>User Manual & Guide</p>
+        </header>
+
+        <nav>
+            <ul>
+                <li><a href="#getting-started">Getting Started</a></li>
+                <li><a href="#dashboard">Dashboard</a></li>
+                <li><a href="#products">Product Management</a></li>
+                <li><a href="#counting">Inventory Counting</a></li>
+                <li><a href="#filters">Filters & Search</a></li>
+                <li><a href="#import-export">Import/Export</a></li>
+            </ul>
+        </nav>
+
+        <div class="content">
+            <!-- Getting Started -->
+            <section id="getting-started">
+                <h2>Getting Started</h2>
+                
+                <h3>Welcome!</h3>
+                <p>Welcome to the Physical Inventory Count application. This system helps you efficiently manage product inventory, conduct physical counts, and track discrepancies in real-time.</p>
+
+                <h3>Logging In</h3>
+                <ol>
+                    <li>Navigate to the application URL</li>
+                    <li>Enter your email and password</li>
+                    <li>Click "Sign In"</li>
+                </ol>
+
+                <div class="tip">
+                    New users should contact their administrator to create an account and be added to the organization.
+                </div>
+
+                <h3>First Time Setup</h3>
+                <p>If you're setting up a new organization:</p>
+                <ol>
+                    <li>Create an account using the Sign Up option</li>
+                    <li>Enter your organization details</li>
+                    <li>You'll be automatically logged in and can start adding products</li>
+                </ol>
+            </section>
+
+            <!-- Dashboard -->
+            <section id="dashboard">
+                <h2>Dashboard Overview</h2>
+                
+                <img src="dashboard_overview_1763935025160.png" alt="Dashboard Interface" class="screenshot">
+
+                <h3>Key Metrics</h3>
+                <p>The dashboard displays four important metrics at the top:</p>
+                
+                <div class="feature-box">
+                    <h4>Total Products</h4>
+                    <p>The total number of unique products in your inventory system.</p>
+                </div>
+
+                <div class="feature-box">
+                    <h4>Total Counted</h4>
+                    <p>The sum of all inventory counts recorded during the current counting session.</p>
+                </div>
+
+                <div class="feature-box">
+                    <h4>Completion %</h4>
+                    <p>Percentage of expected stock that has been physically counted.</p>
+                </div>
+
+                <div class="feature-box">
+                    <h4>Discrepancies</h4>
+                    <p>Number of products where counted quantity doesn't match expected stock.</p>
+                </div>
+
+                <h3>Progress Bar</h3>
+                <p>The progress bar visually shows how much of your inventory has been counted. It fills from left to right as you complete more counts.</p>
+
+                <h3>Inventory Status Table</h3>
+                <p>The main table shows products with their counting status:</p>
+                <ul>
+                    <li><span class="badge badge-green">Exact Match</span> - Counted quantity matches expected stock</li>
+                    <li><span class="badge badge-yellow">Surplus X</span> - You have more items than expected</li>
+                    <li><span class="badge badge-red">Missing X</span> - You have fewer items than expected</li>
+                </ul>
+
+                <h3>Filters</h3>
+                <p>Use the filters to view:</p>
+                <ul>
+                    <li><strong>Discrepancies Only</strong> - Show only products with counting differences</li>
+                    <li><strong>All Items</strong> - Show all products regardless of status</li>
+                    <li><strong>Store</strong> - Filter by specific store location</li>
+                    <li><strong>Location</strong> - Filter by aisle, shelf, or room within a store</li>
+                </ul>
+
+                <h3>Export Results</h3>
+                <p>Click the <strong>Export Results</strong> button to download a CSV file containing all products and their count data. This is useful for reporting and record-keeping.</p>
+            </section>
+
+            <!-- Product Management -->
+            <section id="products">
+                <h2>Product Management</h2>
+                
+                <img src="product_list_1763935043562.png" alt="Product List Interface" class="screenshot">
+
+                <h3>Adding Products Manually</h3>
+                <p>To add a new product to your inventory:</p>
+                <ol>
+                    <li>Navigate to the <strong>Products</strong> page</li>
+                    <li>Fill in the "Add New Product" form:
+                        <ul>
+                            <li><strong>SKU *</strong> (Required) - Unique product identifier</li>
+                            <li><strong>Product Name *</strong> (Required) - Descriptive name</li>
+                            <li><strong>Price</strong> - Unit price (optional)</li>
+                            <li><strong>Expected Stock</strong> - How many you expect to have</li>
+                            <li><strong>Category Level 1-3</strong> - Organization categories</li>
+                            <li><strong>Store</strong> - Which store or warehouse</li>
+                            <li><strong>Location</strong> - Specific location within the store</li>
+                        </ul>
+                    </li>
+                    <li>Click <strong>Add Product</strong></li>
+                </ol>
+
+                <div class="tip">
+                    Use consistent naming for Store and Location to make filtering easier later!
+                </div>
+
+                <h3>Editing Products</h3>
+                <p>To edit an existing product:</p>
+                <ol>
+                    <li>Find the product in the list</li>
+                    <li>Click the <strong>Edit</strong> icon (pencil)</li>
+                    <li>Modify the fields inline</li>
+                    <li>Click the <strong>checkmark</strong> to save or <strong>X</strong> to cancel</li>
+                </ol>
+
+                <h3>Deleting Products</h3>
+                <p>To delete a product:</p>
+                <ol>
+                    <li>Click the <strong>Delete</strong> icon (trash can) next to the product</li>
+                    <li>Confirm the deletion in the popup dialog</li>
+                </ol>
+
+                <div class="warning">
+                    Deleting a product also removes all associated count records. This action cannot be undone!
+                </div>
+
+                <h3>Bulk Operations</h3>
+                <p>You can perform actions on multiple products at once:</p>
+                <ol>
+                    <li>Check the boxes next to products you want to modify</li>
+                    <li>Use the bulk action toolbar that appears:
+                        <ul>
+                            <li><strong>Delete Selected</strong> - Remove multiple products</li>
+                            <li><strong>Edit Expected Stock</strong> - Set the same expected stock value for all selected items</li>
+                        </ul>
+                    </li>
+                </ol>
+
+                <h3>Pagination</h3>
+                <p>Use the pagination controls to:</p>
+                <ul>
+                    <li>Change how many products display per page (25, 50, or 100)</li>
+                    <li>Navigate between pages using Previous/Next buttons</li>
+                </ul>
+            </section>
+
+            <!-- Counting -->
+            <section id="counting">
+                <h2>Inventory Counting</h2>
+                
+                <img src="count_interface_1763935059771.png" alt="Count Interface" class="screenshot">
+
+                <h3>How to Count Inventory</h3>
+                <p>The Count interface is optimized for quick, efficient counting:</p>
+
+                <h3>Step 1: Find the Product</h3>
+                <ul>
+                    <li>Enter or scan the product SKU in the search field</li>
+                    <li>The product details will automatically load</li>
+                    <li>Review the product name, categories, store, and location to ensure it's correct</li>
+                </ul>
+
+                <h3>Step 2: Enter Quantity</h3>
+                <p>Use the quantity controls to enter how many items you counted:</p>
+                <ul>
+                    <li>Click <strong>+</strong> to increase by 1</li>
+                    <li>Click <strong>-</strong> to decrease by 1</li>
+                    <li>Or type the number directly into the field</li>
+                </ul>
+
+                <h3>Step 3: Record Count</h3>
+                <ul>
+                    <li>Click the <strong>Record Count</strong> button</li>
+                    <li>The count is saved to the database instantly</li>
+                    <li>The product card clears, ready for the next item</li>
+                </ul>
+
+                <div class="tip">
+                    You can count the same product multiple times. The system will add up all counts for that product.
+                </div>
+
+                <h3>Recent Counts</h3>
+                <p>The bottom section shows your recently recorded counts with timestamps. This helps you verify your work and catch any mistakes immediately.</p>
+
+                <h3>Continue Count from Products</h3>
+                <p>You can also navigate directly to counting from the Product List or Dashboard:</p>
+                <ul>
+                    <li>Click the scanner icon next to any product</li>
+                    <li>You'll be taken to the Count page with that product already loaded</li>
+                </ul>
+            </section>
+
+            <!-- Filters and Search -->
+            <section id="filters">
+                <h2>Filters & Search</h2>
+
+                <h3>Search Bar</h3>
+                <p>The search function looks across multiple fields:</p>
+                <ul>
+                    <li>SKU</li>
+                    <li>Product Name</li>
+                    <li>All category levels</li>
+                    <li>Store name</li>
+                    <li>Location</li>
+                </ul>
+                <p>Just type in the search box and results filter in real-time.</p>
+
+                <h3>Category Filters</h3>
+                <p>The three category filter dropdowns work in a cascading manner:</p>
+                <ol>
+                    <li>Select <strong>Category Level 1</strong> - Level 2 options update</li>
+                    <li>Select <strong>Category Level 2</strong> - Level 3 options update</li>
+                    <li>Select <strong>Category Level 3</strong> - Final filtering applied</li>
+                </ol>
+
+                <h3>Store & Location Filters</h3>
+                <p>These filters help you focus on specific areas:</p>
+                <ul>
+                    <li><strong>Store Filter</strong> - Select a store to see only products from that location</li>
+                    <li><strong>Location Filter</strong> - When a store is selected, this shows only locations within that store</li>
+                </ul>
+
+                <div class="tip">
+                    Combine filters with search for powerful filtering. For example, search "wireless" and filter by "Electronics" category and "Main Warehouse" store.
+                </div>
+
+                <h3>Clearing Filters</h3>
+                <p>To clear filters, select "All" from any dropdown, or clear the search box.</p>
+            </section>
+
+            <!-- Import/Export -->
+            <section id="import-export">
+                <h2>Import & Export</h2>
+
+                <h3>Importing Products via CSV</h3>
+                <p>Quickly add many products at once:</p>
+                <ol>
+                    <li>Click the <strong>Import CSV</strong> button on the Products page</li>
+                    <li>Prepare your CSV file with these columns:
+                        <ul>
+                            <li><code>sku</code> (required)</li>
+                            <li><code>name</code> (required)</li>
+                            <li><code>categoryLevel1</code></li>
+                            <li><code>categoryLevel2</code></li>
+                            <li><code>categoryLevel3</code></li>
+                            <li><code>price</code></li>
+                            <li><code>expectedStock</code></li>
+                            <li><code>store</code></li>
+                            <li><code>location</code></li>
+                        </ul>
+                    </li>
+                    <li>Click <strong>Choose File</strong> and select your CSV</li>
+                    <li>Click <strong>Import Products</strong></li>
+                    <li>Review the preview and confirm</li>
+                </ol>
+
+                <div class="warning">
+                    Make sure your CSV uses the exact column names shown above. The import will fail if column names don't match.
+                </div>
+
+                <h3>Exporting Count Results</h3>
+                <p>Export your inventory count data:</p>
+                <ol>
+                    <li>Go to the Dashboard</li>
+                    <li>Click <strong>Export Results</strong></li>
+                    <li>A CSV file downloads with all products, expected stock, counted quantities, and discrepancies</li>
+                </ol>
+
+                <p>The exported file includes:</p>
+                <ul>
+                    <li>All product information (SKU, name, categories, store, location)</li>
+                    <li>Expected stock levels</li>
+                    <li>Total counted quantities</li>
+                    <li>Variance (difference between expected and counted)</li>
+                </ul>
+            </section>
+
+            <!-- Tips & Best Practices -->
+            <section id="tips">
+                <h2>Tips & Best Practices</h2>
+
+                <h3>Organizing Your Inventory</h3>
+                <div class="feature-box">
+                    <h4>Use Consistent Naming</h4>
+                    <p>When entering Store and Location information, use consistent names. For example, always use "Main Warehouse" not "Main", "Main Whs", etc. This makes filtering much easier.</p>
+                </div>
+
+                <div class="feature-box">
+                    <h4>Set Accurate Expected Stock</h4>
+                    <p>Before starting a count, ensure your expected stock values are up to date. This gives you meaningful discrepancy reports.</p>
+                </div>
+
+                <div class="feature-box">
+                    <h4>Use Categories Wisely</h4>
+                    <p>The three category levels let you organize products hierarchically. For example:
+                        <ul>
+                            <li>Level 1: Department (Electronics, Clothing, etc.)</li>
+                            <li>Level 2: Category (Computers, Accessories, etc.)</li>
+                            <li>Level 3: Subcategory (Laptops, Mice, Keyboards, etc.)</li>
+                        </ul>
+                    </p>
+                </div>
+
+                <h3>Efficient Counting</h3>
+                <div class="feature-box">
+                    <h4>Count by Location</h4>
+                    <p>Use the Store and Location filters on the Products page to print count sheets for specific areas. This makes physical counting more efficient.</p>
+                </div>
+
+                <div class="feature-box">
+                    <h4>Review Discrepancies Daily</h4>
+                    <p>Check the Dashboard's discrepancies filter daily. Recount items with large variances to catch errors early.</p>
+                </div>
+
+                <div class="feature-box">
+                    <h4>Export Regularly</h4>
+                    <p>Export your count results at the end of each day or counting session. This provides a backup and audit trail.</p>
+                </div>
+
+                <h3>Mobile Usage</h3>
+                <p>The app works great on mobile devices:</p>
+                <ul>
+                    <li>Tables automatically convert to mobile-friendly card views</li>
+                    <li>The Count interface is optimized for touch with large buttons</li>
+                    <li>Use a Bluetooth barcode scanner for even faster counting</li>
+                </ul>
+            </section>
+
+            <!-- Troubleshooting -->
+            <section id="troubleshooting">
+                <h2>Troubleshooting</h2>
+
+                <h3>Can't Log In</h3>
+                <p><strong>Solution:</strong> Verify your email and password are correct. If you forgot your password, contact your administrator to reset it.</p>
+
+                <h3>Products Not Appearing</h3>
+                <p><strong>Solution:</strong> Check if filters are applied. Clear all filters by selecting "All" in each dropdown and clearing the search box.</p>
+
+                <h3>Count Not Saving</h3>
+                <p><strong>Solution:</strong> Check your internet connection. The app requires an active connection to save data. Refresh the page and try again.</p>
+
+                <h3>CSV Import Failed</h3>
+                <p><strong>Solutions:</strong></p>
+                <ul>
+                    <li>Verify column names match exactly (case-sensitive)</li>
+                    <li>Ensure required fields (sku, name) have values</li>
+                    <li>Check for special characters that might cause parsing errors</li>
+                    <li>Make sure the file is saved as CSV, not Excel format</li>
+                </ul>
+
+                <h3>Need More Help?</h3>
+                <p>Contact your system administrator or organization manager for additional support.</p>
+            </section>
+        </div>
+
+        <footer>
+            <p>&copy; 2024 Physical Inventory Count System</p>
+            <p>Version 2.0 | Last Updated: November 2024</p>
+        </footer>
+    </div>
+</body>
+</html>
