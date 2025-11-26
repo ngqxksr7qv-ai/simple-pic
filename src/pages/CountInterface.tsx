@@ -2,16 +2,25 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useInventory } from '../store/InventoryContext';
 import type { Product } from '../types';
-import { Plus, Minus, ScanLine, AlertCircle, Camera, X } from 'lucide-react';
+import { Plus, Minus, ScanLine, AlertCircle, Camera, X, User } from 'lucide-react';
 import BarcodeScanner from '../components/BarcodeScanner';
+import CounterSessionModal from '../components/CounterSessionModal';
 
 const CountInterface: React.FC = () => {
-    const { getProductBySku, addCount, counts, products } = useInventory();
+    const { getProductBySku, addCount, counts, products, counterName } = useInventory();
     const [skuInput, setSkuInput] = useState('');
     const [currentProduct, setCurrentProduct] = useState<Product | null>(null);
     const [error, setError] = useState('');
+    const [isCounterModalOpen, setIsCounterModalOpen] = useState(false);
     const inputRef = useRef<HTMLInputElement>(null);
     const location = useLocation();
+
+    // Check for counter name on mount
+    useEffect(() => {
+        if (!counterName) {
+            setIsCounterModalOpen(true);
+        }
+    }, [counterName]);
 
     // Focus input on mount and check for passed SKU
     useEffect(() => {
@@ -108,10 +117,20 @@ const CountInterface: React.FC = () => {
 
     return (
         <div className="max-w-3xl mx-auto space-y-8">
+            <CounterSessionModal isOpen={isCounterModalOpen} onClose={() => setIsCounterModalOpen(false)} />
+
             <div className="bg-white shadow rounded-lg p-6">
-                <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
-                    <ScanLine className="mr-2" /> Inventory Count
-                </h2>
+                <div className="flex justify-between items-center mb-6">
+                    <h2 className="text-2xl font-bold text-gray-900 flex items-center">
+                        <ScanLine className="mr-2" /> Inventory Count
+                    </h2>
+                    {counterName && (
+                        <div className="flex items-center text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
+                            <User size={14} className="mr-1" />
+                            Counting as: <span className="font-medium ml-1 text-gray-900">{counterName}</span>
+                        </div>
+                    )}
+                </div>
 
                 <form onSubmit={handleScan} className="mb-6">
                     <label htmlFor="sku" className="block text-sm font-medium text-gray-700 mb-1">
@@ -252,7 +271,12 @@ const CountInterface: React.FC = () => {
                                             <span className={`font-bold ${count.quantity > 0 ? 'text-green-600' : 'text-red-600'} mr-2`}>
                                                 {count.quantity > 0 ? '+' : ''}{count.quantity}
                                             </span>
-                                            <span>{new Date(count.timestamp).toLocaleTimeString()}</span>
+                                            <span className="mr-3">{new Date(count.timestamp).toLocaleTimeString()}</span>
+                                            {count.counterName && (
+                                                <span className="bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full text-xs">
+                                                    {count.counterName}
+                                                </span>
+                                            )}
                                         </div>
                                     </div>
                                 </li>

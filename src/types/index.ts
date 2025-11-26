@@ -16,6 +16,7 @@ export interface CountRecord {
     productId: string;
     quantity: number;
     timestamp: number;
+    counterName?: string;
 }
 
 export interface InventoryState {

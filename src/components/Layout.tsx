@@ -1,8 +1,10 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, ScanLine, Package, Menu, X, LogOut, Settings as SettingsIcon, BookOpen, ChevronLeft, ChevronRight } from 'lucide-react';
+import { LayoutDashboard, ScanLine, Package, Menu, X, LogOut, Settings as SettingsIcon, BookOpen, ChevronLeft, ChevronRight, User } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
+import { useInventory } from '../store/InventoryContext';
+import CounterSessionModal from './CounterSessionModal';
 
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -10,8 +12,10 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         const saved = localStorage.getItem('sidebarCollapsed');
         return saved ? JSON.parse(saved) : false;
     });
+    const [isCounterModalOpen, setIsCounterModalOpen] = useState(false);
     const location = useLocation();
     const { organization, signOut } = useAuth();
+    const { counterName } = useInventory();
 
     // Save sidebar state to localStorage
     useEffect(() => {
@@ -36,6 +40,8 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
     return (
         <div className="min-h-screen bg-gray-50 flex">
+            <CounterSessionModal isOpen={isCounterModalOpen} onClose={() => setIsCounterModalOpen(false)} />
+
             {/* Sidebar for Desktop */}
             <div className={`hidden md:flex md:${sidebarWidth} md:flex-col md:fixed md:inset-y-0 bg-white border-r border-gray-200 transition-all duration-300`}>
                 <div className="flex-1 flex flex-col min-h-0">
@@ -70,8 +76,8 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                                     key={item.name}
                                     to={item.href}
                                     className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md ${isActive(item.href)
-                                            ? 'bg-indigo-50 text-indigo-600'
-                                            : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                                        ? 'bg-indigo-50 text-indigo-600'
+                                        : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
                                         } ${isSidebarCollapsed ? 'justify-center' : ''}`}
                                     title={isSidebarCollapsed ? item.name : ''}
                                 >
@@ -84,6 +90,23 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                             );
                         })}
                     </nav>
+
+                    {/* Counter Session Info */}
+                    <div className="px-2 pb-2">
+                        <button
+                            onClick={() => setIsCounterModalOpen(true)}
+                            className={`w-full group flex items-center px-2 py-2 text-sm font-medium rounded-md text-gray-600 hover:bg-gray-50 hover:text-gray-900 ${isSidebarCollapsed ? 'justify-center' : ''}`}
+                            title={isSidebarCollapsed ? `Counter: ${counterName || 'Set Name'}` : ''}
+                        >
+                            <User className={`flex-shrink-0 h-6 w-6 text-gray-400 group-hover:text-gray-500 ${isSidebarCollapsed ? '' : 'mr-3'}`} />
+                            {!isSidebarCollapsed && (
+                                <div className="flex flex-col items-start">
+                                    <span className="text-xs text-gray-500">Counter</span>
+                                    <span className="font-medium truncate max-w-[120px]">{counterName || 'Set Name'}</span>
+                                </div>
+                            )}
+                        </button>
+                    </div>
 
                     {/* User Manual Link */}
                     <div className="px-2 pb-4">
@@ -154,8 +177,8 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                                         to={item.href}
                                         onClick={() => setIsMobileMenuOpen(false)}
                                         className={`group flex items-center px-2 py-2 text-base font-medium rounded-md ${isActive(item.href)
-                                                ? 'bg-indigo-50 text-indigo-600'
-                                                : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                                            ? 'bg-indigo-50 text-indigo-600'
+                                            : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
                                             }`}
                                     >
                                         <Icon
@@ -166,8 +189,26 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                                 );
                             })}
                         </nav>
+
+                        {/* Mobile Counter Session Info */}
+                        <div className="px-2 pb-2 border-t border-gray-200 pt-4">
+                            <button
+                                onClick={() => {
+                                    setIsMobileMenuOpen(false);
+                                    setIsCounterModalOpen(true);
+                                }}
+                                className="w-full group flex items-center px-2 py-2 text-base font-medium rounded-md text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                            >
+                                <User className="mr-4 flex-shrink-0 h-6 w-6 text-gray-400 group-hover:text-gray-500" />
+                                <div className="flex flex-col items-start">
+                                    <span className="text-xs text-gray-500">Counter</span>
+                                    <span className="font-medium">{counterName || 'Set Name'}</span>
+                                </div>
+                            </button>
+                        </div>
+
                         {/* User Manual Link */}
-                        <div className="px-2 pb-4 border-t border-gray-200 pt-4">
+                        <div className="px-2 pb-4">
                             <a
                                 href="/user-manual.html"
                                 target="_blank"

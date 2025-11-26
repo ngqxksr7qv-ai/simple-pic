@@ -6,6 +6,8 @@ import { RealtimeChannel } from '@supabase/supabase-js';
 
 interface InventoryContextType extends InventoryState {
     loading: boolean;
+    counterName: string;
+    setCounterName: (name: string) => void;
     addProduct: (product: Omit<Product, 'id'>) => Promise<void>;
     addProducts: (products: Omit<Product, 'id'>[]) => Promise<void>;
     updateProduct: (id: string, updates: Partial<Product>) => Promise<void>;
@@ -29,6 +31,14 @@ export const InventoryProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     const { organization, user } = useAuth();
     const [state, setState] = useState<InventoryState>(INITIAL_STATE);
     const [loading, setLoading] = useState(true);
+    const [counterName, setCounterNameState] = useState(() => {
+        return localStorage.getItem('inventory_counter_name') || '';
+    });
+
+    const setCounterName = (name: string) => {
+        setCounterNameState(name);
+        localStorage.setItem('inventory_counter_name', name);
+    };
 
     // Load data when organization is available
     useEffect(() => {
@@ -108,6 +118,7 @@ export const InventoryProvider: React.FC<{ children: React.ReactNode }> = ({ chi
                                 productId: payload.new.product_id,
                                 quantity: payload.new.quantity,
                                 timestamp: new Date(payload.new.timestamp).getTime(),
+                                counterName: payload.new.counter_name,
                             };
                             setState((prev) => {
                                 if (prev.counts.some(c => c.id === newCount.id)) {
@@ -119,10 +130,6 @@ export const InventoryProvider: React.FC<{ children: React.ReactNode }> = ({ chi
                                 };
                             });
                         } else if (payload.eventType === 'DELETE') {
-                            // Handle delete (e.g. reset counts)
-                            // Note: payload.old.id might be the only thing available for DELETE
-                            // But for resetCounts, we might get multiple DELETE events or need to handle bulk delete differently
-                            // For simple row delete:
                             if (payload.old.id) {
                                 setState((prev) => ({
                                     ...prev,
@@ -204,6 +211,7 @@ export const InventoryProvider: React.FC<{ children: React.ReactNode }> = ({ chi
                 productId: c.product_id,
                 quantity: c.quantity,
                 timestamp: new Date(c.timestamp).getTime(),
+                counterName: c.counter_name,
             }));
 
             setState({
@@ -452,6 +460,7 @@ export const InventoryProvider: React.FC<{ children: React.ReactNode }> = ({ chi
                     quantity,
                     timestamp: Date.now(),
                     counted_by: user?.id,
+                    counter_name: counterName || 'Unknown',
                 })
                 .select()
                 .single();
@@ -463,6 +472,7 @@ export const InventoryProvider: React.FC<{ children: React.ReactNode }> = ({ chi
                 productId: data.product_id,
                 quantity: data.quantity,
                 timestamp: new Date(data.timestamp).getTime(),
+                counterName: data.counter_name,
             };
 
             setState(prev => {
@@ -506,6 +516,8 @@ export const InventoryProvider: React.FC<{ children: React.ReactNode }> = ({ chi
             value={{
                 ...state,
                 loading,
+                counterName,
+                setCounterName,
                 addProduct,
                 addProducts,
                 updateProduct,

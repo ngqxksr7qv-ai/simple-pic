@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useInventory } from '../store/InventoryContext';
 import { Package, CheckCircle, TrendingUp, AlertTriangle, Download } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { exportToCSV } from '../utils/exportUtils';
+import { exportToCSV, exportAuditLogToCSV } from '../utils/exportUtils';
 
 const Dashboard: React.FC = () => {
     const { products, counts, loading, deleteProducts, deleteAllProducts, bulkUpdateExpectedStock } = useInventory();
@@ -79,6 +79,10 @@ const Dashboard: React.FC = () => {
         exportToCSV(products, counts);
     };
 
+    const handleExportAuditLog = () => {
+        exportAuditLogToCSV(products, counts);
+    };
+
     const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.checked) {
             setSelectedIds(paginatedItems.map(p => p.id));
@@ -134,6 +138,13 @@ const Dashboard: React.FC = () => {
                     >
                         <Download className="-ml-1 mr-2 h-5 w-5" />
                         Export Results
+                    </button>
+                    <button
+                        onClick={handleExportAuditLog}
+                        className="ml-3 inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                    >
+                        <Download className="-ml-1 mr-2 h-5 w-5 text-gray-500" />
+                        Export Audit Log
                     </button>
                 </div>
 
@@ -531,6 +542,50 @@ const Dashboard: React.FC = () => {
                             </div>
                         </div>
                     )}
+                </div>
+
+                {/* Recent Global Activity */}
+                <div className="bg-white shadow rounded-lg overflow-hidden">
+                    <div className="px-4 py-5 sm:px-6 border-b border-gray-200">
+                        <h3 className="text-lg leading-6 font-medium text-gray-900">Recent Global Activity</h3>
+                    </div>
+                    <ul className="divide-y divide-gray-200">
+                        {[...counts].sort((a, b) => b.timestamp - a.timestamp).slice(0, 10).map((count) => {
+                            const product = products.find(p => p.id === count.productId);
+                            return (
+                                <li key={count.id} className="px-4 py-4 sm:px-6">
+                                    <div className="flex items-center justify-between">
+                                        <div className="flex flex-col">
+                                            <span className="text-sm font-medium text-gray-900">
+                                                {product?.name || 'Unknown Product'}
+                                            </span>
+                                            <span className="text-xs text-gray-500">
+                                                SKU: {product?.sku || 'Unknown'}
+                                            </span>
+                                        </div>
+                                        <div className="flex items-center text-sm text-gray-500">
+                                            <span className={`font-bold ${count.quantity > 0 ? 'text-green-600' : 'text-red-600'} mr-3`}>
+                                                {count.quantity > 0 ? '+' : ''}{count.quantity}
+                                            </span>
+                                            <div className="flex flex-col items-end">
+                                                <span>{new Date(count.timestamp).toLocaleString()}</span>
+                                                {count.counterName && (
+                                                    <span className="text-xs bg-gray-100 px-2 py-0.5 rounded-full mt-1">
+                                                        by {count.counterName}
+                                                    </span>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            );
+                        })}
+                        {counts.length === 0 && (
+                            <li className="px-4 py-4 sm:px-6 text-center text-sm text-gray-500">
+                                No activity recorded yet.
+                            </li>
+                        )}
+                    </ul>
                 </div>
             </div>
 
