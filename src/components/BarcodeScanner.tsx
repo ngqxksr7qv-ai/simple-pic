@@ -60,7 +60,28 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ onScanSuccess, onScanFa
                         {
                             fps: 10,
                             qrbox: { width: 250, height: 250 },
-                            aspectRatio: 1.0
+                            aspectRatio: 1.0,
+                            // Optimization: Specify barcode formats to improve accuracy
+                            formatsToSupport: [
+                                // UPC formats
+                                'UPC_A',
+                                'UPC_E',
+                                // EAN formats
+                                'EAN_13',
+                                'EAN_8',
+                                // Common SKU formats (adjust based on your labels)
+                                'CODE_128',
+                                'CODE_39',
+                                'CODE_93',
+                                // QR codes (if needed)
+                                'QR_CODE'
+                            ],
+                            // Use higher quality video stream
+                            videoConstraints: {
+                                facingMode: "environment",
+                                width: { ideal: 1920 },
+                                height: { ideal: 1080 },
+                            }
                         },
                         (decodedText, decodedResult) => {
                             onScanSuccess(decodedText, decodedResult);
