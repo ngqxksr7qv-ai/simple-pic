@@ -55,6 +55,7 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({ onScanSuccess, onScanFa
                         });
                     }
 
+                    console.log('🔍 Starting scanner with optimized configuration...');
                     await scannerRef.current.start(
                         selectedCamera,
                         {
